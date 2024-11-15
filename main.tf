@@ -74,6 +74,13 @@ resource "azurerm_app_service" "valeriy777_app" {
   identity {
     type = "SystemAssigned"
   }
+   site_config {
+    linux_fx_version = "DOCKER|valeriy777yo/docker_cicd:latest"
+  }
+
+  app_settings = {
+    WEBSITES_ENABLE_APP_SERVICE_STORAGE = "false"
+  }
 }
 
 # App Service VNet Integration
