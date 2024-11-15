@@ -9,7 +9,7 @@ pr:
       - main
 
 variables:
-  - group: AzCred  # Вказуємо на групу змінних, яку ми створили для Azure credentials
+  - group: AzCred  # Group of variables for Azure credentials
 
 stages:
 - stage: CI
@@ -131,16 +131,28 @@ stages:
         displayName: 'Build .NET Project'
 
       - script: |
-          sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo apt-get update
+          sudo apt-get install -y docker.io
+          sudo systemctl start docker
+          sudo systemctl enable docker
+          docker --version
+        displayName: 'Install Docker'
+
+      - script: |
+          DOCKER_COMPOSE_VERSION="1.29.2"
+          sudo curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose --version
         displayName: 'Install Docker Compose'
 
       - script: |
-          docker-compose -f ./docker-compose.yml build
+          docker-compose -f ./ASPNETCore-WebAPI-Sample/docker-compose.yml build
         displayName: 'Build Docker Image using Docker Compose'
 
       - script: |
           echo $(servicePrincipalKey) | az login --service-principal --username $(servicePrincipalId) --password $(servicePrincipalKey) --tenant $(tenantId)
-          az webapp config container set --name $(appServiceName) --resource-group $(resourceGroup) --docker-custom-image-name $(dockerHubUsername)/$(dockerImageName):latest
+          az webapp config container set \
+            --name $(appServiceName) \
+            --resource-group $(resourceGroup) \
+            --docker-custom-image-name $(dockerHubUsername)/$(dockerImageName):latest
         displayName: 'Deploy Docker Container to Azure Web App'
