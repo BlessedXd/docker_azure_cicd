@@ -127,7 +127,7 @@ stages:
           installationPath: $(Agent.ToolsDirectory)/dotnet
 
       - script: |
-          dotnet build ./ASPNETCore-WebAPI-Sample/SampleWebApiAspNetCore/SampleWebApiAspNetCore.csproj --configuration Release
+          dotnet build ./ASPNETCore-WebAPI-Sample/SampleWebApiAspNetCore.csproj --configuration Release
         displayName: 'Build .NET Project'
 
       - script: |
