@@ -137,7 +137,7 @@ stages:
         displayName: 'Install Docker Compose'
 
       - script: |
-          docker-compose -p docker-compose.yml build
+          docker-compose -f ./docker-compose.yml build
         displayName: 'Build Docker Image using Docker Compose'
 
       - script: |
