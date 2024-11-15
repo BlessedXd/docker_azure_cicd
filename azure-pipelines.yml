@@ -120,6 +120,15 @@ stages:
     steps:
       - checkout: self
 
+      # Step to list .csproj files and confirm the path
+      - task: Bash@3
+        displayName: 'List .csproj Files'
+        inputs:
+          targetType: 'inline'
+          script: |
+            echo "Listing all .csproj files"
+            find . -name "*.csproj"
+
       - task: UseDotNet@2
         inputs:
           packageType: 'sdk'
